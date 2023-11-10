@@ -6,4 +6,3 @@ def sendTelegramMessage(Map<String, Object> envVars, String message) {
     sh """
     curl -s -X POST https://api.telegram.org/bot${telegramBotToken}/sendMessage -d chat_id=${telegramChatId} -d text='${message}'
     """
-}

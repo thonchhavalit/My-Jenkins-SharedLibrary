@@ -1,4 +1,4 @@
-def call(REGISTRY_DOCKER, BUIDL_CONTAINER_NAME, DOCKER_TAG, MAIL_SEND_TO, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
+def call(REGISTRY_DOCKER, BUIDL_CONTAINER_NAME, DOCKER_TAG, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
     cleanDockerImages(REGISTRY_DOCKER, BUIDL_CONTAINER_NAME, DOCKER_TAG)
     
     try {
@@ -28,9 +28,9 @@ def sendTelegramMessage(message) {
     sh "curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text='${message}'"
 }
 
-def sendGmailMessage(message) {
-    mail bcc: '', body: message, cc: '', from: '', replyTo: '', subject: 'Docker Build Status', to: MAIL_SEND_TO  
-}
+// def sendGmailMessage(message) {
+//     mail bcc: '', body: message, cc: '', from: '', replyTo: '', subject: 'Docker Build Status', to: MAIL_SEND_TO  
+// }
 
 // def dockerfileContent = '''
 // # Dockerfile

@@ -25,7 +25,7 @@ pipeline {
         CONTAINER_NAME= "${params.CONTAINER_NAME}"
         DOCKER_TAG = "${params.DOCKER_TAG}" // Define your Docker tag
         //for mail
-        MAIL_SEND_TO = 'thonchhavalit@gmail.com'
+        // MAIL_SEND_TO = 'thonchhavalit@gmail.com'
         //for port range 
         MIN_PORT = '3000'
         MAX_PORT = '3010'
@@ -78,7 +78,7 @@ pipeline {
                     // Build the Docker image using the specified Dockerfile
                     def dockerImage = docker.build("nextjs", "-f Dockerfile .")
 
-                    nextBuild(REGISTRY_DOCKER, BUILD_CONTAINER_NAME, DOCKER_TAG, MAIL_SEND_TO, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
+                    nextBuild(REGISTRY_DOCKER, BUILD_CONTAINER_NAME, DOCKER_TAG, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
                 }
             }
         }
@@ -92,7 +92,7 @@ pipeline {
                         BUILD_CONTAINER_NAME,
                         CONTAINER_NAME,
                         DOCKER_TAG,
-                        MAIL_SEND_TO,
+                        // MAIL_SEND_TO,
                         TELEGRAM_BOT_TOKEN,
                         TELEGRAM_CHAT_ID
                     )

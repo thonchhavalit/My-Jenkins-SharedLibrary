@@ -25,7 +25,7 @@ pipeline {
         CONTAINER_NAME= "${params.CONTAINER_NAME}"
         DOCKER_TAG = "${params.DOCKER_TAG}" // Define your Docker tag
         //for mail
-        MAIL_SEND_TO = 'thonchhavalit@gmail.com'
+        // MAIL_SEND_TO = 'thonchhavalit@gmail.com'
         //for port range 
         MIN_PORT = '3000'
         MAX_PORT = '3010'
@@ -74,7 +74,7 @@ pipeline {
                     // Build the Docker image using the specified Dockerfile
                     def dockerImage = docker.build("react", "-f Dockerfile .")
 
-                    buildFrontend(REGISTRY_DOCKER, BUILD_CONTAINER_NAME, DOCKER_TAG, MAIL_SEND_TO, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
+                    buildFrontend(REGISTRY_DOCKER, BUILD_CONTAINER_NAME, DOCKER_TAG, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
                 }
             }
         }
@@ -89,7 +89,7 @@ pipeline {
              }
         }
         stage('Pull image from registry - Agent 1') {
-            agent { label 'worker_1_SSH' }
+            // agent { label 'worker_1_SSH' }
             steps {
                 script {
                      withCredentials([usernamePassword(credentialsId: 'docker_hub_access_account', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
@@ -101,20 +101,20 @@ pipeline {
             }
         
 
-        stage('Another Stage - Agent 2') {
-            agent { label 'worker_2_SSH' }
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker_hub_access_account', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                sh "docker login -u $USER -p $PASS"
-                sh "docker pull ${REGISTRY_DOCKER}/${BUILD_CONTAINER_NAME}:${DOCKER_TAG}"
-                     }
-                }
-            }
-        }
+        // stage('Another Stage - Agent 2') {
+        //     // agent { label 'worker_2_SSH' }
+        //     steps {
+        //         script {
+        //             withCredentials([usernamePassword(credentialsId: 'docker_hub_access_account', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+        //         sh "docker login -u $USER -p $PASS"
+        //         sh "docker pull ${REGISTRY_DOCKER}/${BUILD_CONTAINER_NAME}:${DOCKER_TAG}"
+        //              }
+        //         }
+        //     }
+        // }
         
         stage('Deploy Docker- Agent 1') {
-            agent { label 'worker_1_SSH' }
+            // agent { label 'worker_1_SSH' }
             steps {
                 script {
                     deployFrontend(
@@ -124,31 +124,31 @@ pipeline {
                         BUILD_CONTAINER_NAME,
                         CONTAINER_NAME,
                         DOCKER_TAG,
-                        MAIL_SEND_TO,
+                        // MAIL_SEND_TO,
                         TELEGRAM_BOT_TOKEN,
                         TELEGRAM_CHAT_ID
                     )
                 }
             }
         }
-        stage('Deploy Docker- Agent 2') {
-            agent { label 'worker_2_SSH' }
-            steps {
-                script {
-                    deployFrontend(
-                        MIN_PORT,
-                        MAX_PORT,
-                        REGISTRY_DOCKER,
-                        BUILD_CONTAINER_NAME,
-                        CONTAINER_NAME,
-                        DOCKER_TAG,
-                        MAIL_SEND_TO,
-                        TELEGRAM_BOT_TOKEN,
-                        TELEGRAM_CHAT_ID
-                    )
-                }
-            }
-        }
+        // stage('Deploy Docker- Agent 2') {
+        //     agent { label 'worker_2_SSH' }
+        //     steps {
+        //         script {
+        //             deployFrontend(
+        //                 MIN_PORT,
+        //                 MAX_PORT,
+        //                 REGISTRY_DOCKER,
+        //                 BUILD_CONTAINER_NAME,
+        //                 CONTAINER_NAME,
+        //                 DOCKER_TAG,
+        //                 MAIL_SEND_TO,
+        //                 TELEGRAM_BOT_TOKEN,
+        //                 TELEGRAM_CHAT_ID
+        //             )
+        //         }
+        //     }
+        // }
     }
 }
 def generateContainerName() {

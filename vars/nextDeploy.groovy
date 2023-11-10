@@ -1,4 +1,4 @@
-def call(minPort, maxPort, REGISTRY_DOCKER, BUIDL_CONTAINER_NAME,CONTAINER_NAME, DOCKER_TAG, MAIL_SEND_TO, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
+def call(minPort, maxPort, REGISTRY_DOCKER, BUIDL_CONTAINER_NAME,CONTAINER_NAME, DOCKER_TAG, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
     def minPortValue = minPort.toInteger()
     def maxPortValue = maxPort.toInteger()
     def selectedPort = selectRandomAvailablePort(minPortValue, maxPortValue)
@@ -6,7 +6,7 @@ def call(minPort, maxPort, REGISTRY_DOCKER, BUIDL_CONTAINER_NAME,CONTAINER_NAME,
         echo "Selected port: $selectedPort"
         sh "docker run -d -p $selectedPort:3000 --name ${CONTAINER_NAME} ${REGISTRY_DOCKER}/${BUIDL_CONTAINER_NAME}:${DOCKER_TAG}"
         sendTelegramMessage("Docker Deploy $selectedPort:3000 Successfully!", TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
-        sendGmailMessage("Docker Deploy $selectedPort:3000 Successfully!", MAIL_SEND_TO)
+        // sendGmailMessage("Docker Deploy $selectedPort:3000 Successfully!", MAIL_SEND_TO)
         def ipAddress = sh(script: 'curl -s ifconfig.me', returnStdout: true).trim()
         def ipWithPort = "${ipAddress}:${selectedPort}"
         sendTelegramMessage(ipWithPort, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
@@ -23,13 +23,13 @@ def call(minPort, maxPort, REGISTRY_DOCKER, BUIDL_CONTAINER_NAME,CONTAINER_NAME,
 def sendTelegramMessage(message, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
     sh "curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text='${message}'"
 }
-def sendGmailMessage(message, MAIL_SEND_TO) {
-     mail bcc: '', 
-     body: message, cc: '', 
-     from: '', replyTo: '', 
-     subject: 'Hello', 
-     to: MAIL_SEND_TO
-}
+// def sendGmailMessage(message, MAIL_SEND_TO) {
+//      mail bcc: '', 
+//      body: message, cc: '', 
+//      from: '', replyTo: '', 
+//      subject: 'Hello', 
+//      to: MAIL_SEND_TO
+// }
 def selectRandomAvailablePort(minPort, maxPort) {
     def numberOfPortsToCheck = maxPort - minPort + 1
     def portsToCheck = (minPort..maxPort).toList()
