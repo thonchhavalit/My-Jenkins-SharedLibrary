@@ -28,6 +28,6 @@ def sendTelegramMessage(message) {
     sh "curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text='${message}'"
 }
 
-def sendGmailMessage(message) {
-    mail bcc: '', body: message, cc: '', from: '', replyTo: '', subject: 'Docker Build Status', to: MAIL_SEND_TO  
-}
+// def sendGmailMessage(message) {
+//     mail bcc: '', body: message, cc: '', from: '', replyTo: '', subject: 'Docker Build Status', to: MAIL_SEND_TO  
+// }
