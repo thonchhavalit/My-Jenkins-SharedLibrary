@@ -114,24 +114,24 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Deploy Docker- Agent 1') {
-            // agent { label 'worker_1_SSH' }
-            steps {
-                script {
-                    gradleDeploy(
-                        MIN_PORT,
-                        MAX_PORT,
-                        REGISTRY_DOCKER,
-                        BUILD_CONTAINER_NAME,
-                        CONTAINER_NAME,
-                        DOCKER_TAG,
-                        // MAIL_SEND_TO,
-                        TELEGRAM_BOT_TOKEN,
-                        TELEGRAM_CHAT_ID
-                    )
-                }
-            }
-        }
+        // stage('Deploy Docker- Agent 1') {
+        //     // agent { label 'worker_1_SSH' }
+        //     steps {
+        //         script {
+        //             gradleDeploy(
+        //                 MIN_PORT,
+        //                 MAX_PORT,
+        //                 REGISTRY_DOCKER,
+        //                 BUILD_CONTAINER_NAME,
+        //                 CONTAINER_NAME,
+        //                 DOCKER_TAG,
+        //                 // MAIL_SEND_TO,
+        //                 TELEGRAM_BOT_TOKEN,
+        //                 TELEGRAM_CHAT_ID
+        //             )
+        //         }
+        //     }
+        // }
         // stage('Deploy Docker- Agent 2') {
         //     agent { label 'worker_2_SSH' }
         //     steps {
@@ -150,24 +150,24 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('Deploy Docker-master') {
-        //     steps {
-        //         script {
-        //             gradleDeploy(
-        //                 MIN_PORT,
-        //                 MAX_PORT,
-        //                 REGISTRY_DOCKER,
-        //                 BUILD_CONTAINER_NAME,
-        //                 CONTAINER_NAME,
-        //                 DOCKER_TAG,
-        //                 MAIL_SEND_TO,
-        //                 TELEGRAM_BOT_TOKEN,
-        //                 TELEGRAM_CHAT_ID
-        //             )
+        stage('Deploy Docker-master') {
+            steps {
+                script {
+                    gradleDeploy(
+                        MIN_PORT,
+                        MAX_PORT,
+                        REGISTRY_DOCKER,
+                        BUILD_CONTAINER_NAME,
+                        CONTAINER_NAME,
+                        DOCKER_TAG,
+                        // MAIL_SEND_TO,
+                        TELEGRAM_BOT_TOKEN,
+                        TELEGRAM_CHAT_ID
+                    )
 
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
     }
 }
 def generateContainerName() {
