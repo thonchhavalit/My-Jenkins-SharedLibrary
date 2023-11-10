@@ -14,8 +14,8 @@ pipeline {
         string(name: 'REPO_URL', defaultValue: 'https://gitlab.com/MuyleangIng1/reactjs', description: 'Repository URL')
     }
     environment {
-                TELEGRAM_BOT_TOKEN = '6678469501:AAGO8syPMTxn0gQGksBPRchC-EoC6QRoS5o'
-        TELEGRAM_CHAT_ID = '1162994521'
+                TELEGRAM_BOT_TOKEN = '6141657258:AAHjBOPa8eFOhUS_M3FKq8RM8sNqP4JeRMw'
+        TELEGRAM_CHAT_ID = '1322244413'
         NAME_FOR_USER="${params.NAME_FOR_USER}"
         //for docker 
         REGISTRY_DOCKER="${params.REGISTRY_DOCKER}"
