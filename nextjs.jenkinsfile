@@ -1,0 +1,108 @@
+@Library("My-Jenkins-SharedLibrary") _
+
+pipeline {
+    agent any
+     parameters {
+        booleanParam(name: 'BUILD_DOCKER', defaultValue: true, description: 'Build Docker Image')
+        booleanParam(name: 'DOCKER_DEPLOY', defaultValue: true, description: 'Docker Deploy')
+        choice(name: "TEST_CHOICE", choices: ["production", "staging"], description: "Sample multi-choice parameter")
+        string(name: 'REGISTRY_DOCKER', defaultValue: 'thonchhavalit', description: 'Registry')
+        string(name: 'BUILD_CONTAINER_NAME', defaultValue: 'nextjs', description: 'container')
+        // string(name: 'CONTAINER_NAME', defaultValue: 'automatex', description: 'container')
+        string(name: 'CONTAINER_NAME', defaultValue: generateContainerName(), description: 'container')
+        string(name: 'DOCKER_TAG', defaultValue: 'latest', description: 'Docker_tag')
+        string(name: 'REPO_URL', defaultValue: 'https://gitlab.com/MuyleangIng1/nextjs.git', description: 'Repository URL')
+    }
+    environment {
+        TELEGRAM_BOT_TOKEN = '6141657258:AAHjBOPa8eFOhUS_M3FKq8RM8sNqP4JeRMw'
+        TELEGRAM_CHAT_ID = '1322244413'
+        NAME_FOR_USER="${params.NAME_FOR_USER}"
+        //for docker 
+        REGISTRY_DOCKER="${params.REGISTRY_DOCKER}"
+        BUILD_CONTAINER_NAME="${params.BUILD_CONTAINER_NAME}"
+        //REGISTRY_DOCKER = 'muyleangin' // Define your Docker registry
+        //BUIDL_CONTAINER_NAME = 'reactjs' // Define your container name
+        CONTAINER_NAME= "${params.CONTAINER_NAME}"
+        DOCKER_TAG = "${params.DOCKER_TAG}" // Define your Docker tag
+        //for mail
+        MAIL_SEND_TO = 'thonchhavalit@gmail.com'
+        //for port range 
+        MIN_PORT = '3000'
+        MAX_PORT = '3010'
+        //for git link 
+         REPO_URL="${params.REPO_URL}"
+        //REPO_URL = 'https://gitlab.com/MuyleangIng1/reactjs'
+        CREDENTIAL_GIT = 'password_for_gitlab'
+        BRANCH = 'main'
+    }
+    stages {
+        stage('Get Code from SCM') {
+            steps {
+                echo "TEST_CHOICE is ${TEST_CHOICE}"
+                script {
+                    gitHandler(
+                        REPO_URL,
+                        CREDENTIAL_GIT,
+                        BRANCH,
+                        TELEGRAM_BOT_TOKEN,
+                        TELEGRAM_CHAT_ID
+                    )
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building Images for deploying"
+                script {
+                    def dockerfileContent = '''
+                        FROM node:lts as build 
+                            WORKDIR /app 
+                            COPY package*.json ./ 
+                            RUN npm install 
+                            COPY . . 
+                            RUN npm run build 
+
+                            # Production stage
+                            FROM node:lts
+                            WORKDIR /app
+                            COPY --from=build /app ./
+                            RUN npm install -g serve
+                            EXPOSE 3000
+                            CMD ["npm", "start"]
+
+                    '''
+
+                    // Write the Dockerfile content to a file
+                    writeFile file: 'Dockerfile', text: dockerfileContent
+
+                    // Build the Docker image using the specified Dockerfile
+                    def dockerImage = docker.build("nextjs", "-f Dockerfile .")
+
+                    nextBuild(REGISTRY_DOCKER, BUILD_CONTAINER_NAME, DOCKER_TAG, MAIL_SEND_TO, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
+                }
+            }
+        }
+        stage('Deploy Docker') {
+            steps {
+                script {
+                    nextDeploy(
+                        MIN_PORT,
+                        MAX_PORT,
+                        REGISTRY_DOCKER,
+                        BUILD_CONTAINER_NAME,
+                        CONTAINER_NAME,
+                        DOCKER_TAG,
+                        MAIL_SEND_TO,
+                        TELEGRAM_BOT_TOKEN,
+                        TELEGRAM_CHAT_ID
+                    )
+
+                }
+            }
+        }
+    }
+}
+def generateContainerName() {
+    // Generate a dynamic default value, for example, based on a timestamp or a random value
+    return "thonchhavalit-${new Date().getTime()}"
+}

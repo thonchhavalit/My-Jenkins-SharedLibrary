@@ -1,0 +1,16 @@
+@Library ('My-Jenkins-SharedLibrary')_
+pipiline{
+agent any
+    stages{
+        stage('build'){
+            steps{
+                script{
+                    build()
+                }
+            }
+        }
+        stage('build'){
+            
+        }
+    }    
+}
