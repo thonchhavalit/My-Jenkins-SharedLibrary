@@ -94,7 +94,7 @@ pipeline {
             // agent { label 'worker_1_SSH' }
             steps {
                 script {
-                     withCredentials([usernamePassword(credentialsId: 'docker_hub_access_account', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                     withCredentials([usernamePassword(credentialsId: 'jenkins_dockerhub_token', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                 sh "docker login -u $USER -p $PASS"
                 sh "docker pull ${REGISTRY_DOCKER}/${BUILD_CONTAINER_NAME}:${DOCKER_TAG}"
                      }
