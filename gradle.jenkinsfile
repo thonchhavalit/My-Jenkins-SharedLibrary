@@ -8,7 +8,6 @@ pipeline {
         choice(name: "TEST_CHOICE", choices: ["production", "staging"], description: "Sample multi-choice parameter")
         string(name: 'REGISTRY_DOCKER', defaultValue: 'thonchhavalit', description: 'Registry')
         string(name: 'BUILD_CONTAINER_NAME', defaultValue: 'spring', description: 'container')
-        // string(name: 'CONTAINER_NAME', defaultValue: 'automatex', description: 'container')
         string(name: 'CONTAINER_NAME', defaultValue: generateContainerName(), description: 'container')
         string(name: 'DOCKER_TAG', defaultValue: 'latest', description: 'Docker_tag')
         string(name: 'REPO_URL', defaultValue: 'https://github.com/MuyleangIng/swagger-gradle.git', description: 'Repository URL')
@@ -20,7 +19,6 @@ pipeline {
         //for docker 
         REGISTRY_DOCKER="${params.REGISTRY_DOCKER}"
         BUILD_CONTAINER_NAME="${params.BUILD_CONTAINER_NAME}"
-        //REGISTRY_DOCKER = 'muyleangin' // Define your Docker registry
         //BUIDL_CONTAINER_NAME = 'reactjs' // Define your container name
         CONTAINER_NAME= "${params.CONTAINER_NAME}"
         DOCKER_TAG = "${params.DOCKER_TAG}" // Define your Docker tag
@@ -31,7 +29,6 @@ pipeline {
         MAX_PORT = '8090'
         //for git link 
          REPO_URL="${params.REPO_URL}"
-        //REPO_URL = 'https://gitlab.com/MuyleangIng1/reactjs'
         CREDENTIAL_GIT = 'password_for_gitlab'
         BRANCH = 'main'
     }
@@ -101,55 +98,6 @@ pipeline {
                 }
              }
             }
-        
-
-        // stage('Another Stage - Agent 2') {
-        //     // agent { label 'worker_2_SSH' }
-        //     steps {
-        //         script {
-        //             withCredentials([usernamePassword(credentialsId: 'docker_hub_access_account', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-        //         sh "docker login -u $USER -p $PASS"
-        //         sh "docker pull ${REGISTRY_DOCKER}/${BUILD_CONTAINER_NAME}:${DOCKER_TAG}"
-        //              }
-        //         }
-        //     }
-        // }
-        // stage('Deploy Docker- Agent 1') {
-        //     // agent { label 'worker_1_SSH' }
-        //     steps {
-        //         script {
-        //             gradleDeploy(
-        //                 MIN_PORT,
-        //                 MAX_PORT,
-        //                 REGISTRY_DOCKER,
-        //                 BUILD_CONTAINER_NAME,
-        //                 CONTAINER_NAME,
-        //                 DOCKER_TAG,
-        //                 // MAIL_SEND_TO,
-        //                 TELEGRAM_BOT_TOKEN,
-        //                 TELEGRAM_CHAT_ID
-        //             )
-        //         }
-        //     }
-        // }
-        // stage('Deploy Docker- Agent 2') {
-        //     agent { label 'worker_2_SSH' }
-        //     steps {
-        //         script {
-        //             gradleDeploy(
-        //                 MIN_PORT,
-        //                 MAX_PORT,
-        //                 REGISTRY_DOCKER,
-        //                 BUILD_CONTAINER_NAME,
-        //                 CONTAINER_NAME,
-        //                 DOCKER_TAG,
-        //                 MAIL_SEND_TO,
-        //                 TELEGRAM_BOT_TOKEN,
-        //                 TELEGRAM_CHAT_ID
-        //             )
-        //         }
-        //     }
-        // }
         stage('Deploy Docker-master') {
             steps {
                 script {

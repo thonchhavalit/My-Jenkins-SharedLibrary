@@ -27,14 +27,6 @@ def sendTelegramMessage(message, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
     sh "curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text='${message}'"
 }
 
-// def sendGmailMessage(message, MAIL_SEND_TO) {
-//      mail bcc: '', 
-//      body: message, cc: '', 
-//      from: '', replyTo: '', 
-//      subject: 'Hello', 
-//      to: MAIL_SEND_TO
-// }
-
 def selectRandomAvailablePort(minPort, maxPort) {
     def numberOfPortsToCheck = maxPort - minPort + 1
     def portsToCheck = (minPort..maxPort).toList()

@@ -6,7 +6,6 @@ def call(minPort, maxPort, REGISTRY_DOCKER, BUIDL_CONTAINER_NAME,CONTAINER_NAME,
         echo "Selected port: $selectedPort"
         sh "docker run -d -p $selectedPort:8080 --name ${CONTAINER_NAME} -v spring-volume:/app/src/main/resources/images ${REGISTRY_DOCKER}/${BUIDL_CONTAINER_NAME}:${DOCKER_TAG}"
         sendTelegramMessage("Docker Deploy $selectedPort:8080 Successfully!", TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
-        // sendGmailMessage("Docker Deploy $selectedPort:8080 Successfully!", MAIL_SEND_TO)
         def ipAddress = sh(script: 'curl -s ifconfig.me', returnStdout: true).trim()
         def ipWithPort = "${ipAddress}:${selectedPort}"
         sendTelegramMessage(ipWithPort, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID)
@@ -23,13 +22,6 @@ def call(minPort, maxPort, REGISTRY_DOCKER, BUIDL_CONTAINER_NAME,CONTAINER_NAME,
 def sendTelegramMessage(message, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) {
     sh "curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage -d chat_id=${TELEGRAM_CHAT_ID} -d text='${message}'"
 }
-// def sendGmailMessage(message, MAIL_SEND_TO) {
-//      mail bcc: '', 
-//      body: message, cc: '', 
-//      from: '', replyTo: '',
-//      subject: 'Hello', 
-//      to: MAIL_SEND_TO
-// }
 def selectRandomAvailablePort(minPort, maxPort) {
     def numberOfPortsToCheck = maxPort - minPort + 1
     def portsToCheck = (minPort..maxPort).toList()
@@ -57,10 +49,7 @@ def isPortAvailable(port) {
     }
 }
 
-// def isPortInUseForDocker(port) {
-//     def dockerPsOutput = sh(script: "docker ps --format '{{.Ports}}'", returnStdout: true).trim()
-//     return dockerPsOutput.contains(":$port->8080/tcp")
-// }
+
 def isPortInUseForDocker(port) {
     def dockerPsOutput = sh(script: "docker ps --format '{{.Ports}}'", returnStdout: true).trim()
     def portsToCheck = [8080, 8081, 8083, 8084, 8085] // Add more ports as needed

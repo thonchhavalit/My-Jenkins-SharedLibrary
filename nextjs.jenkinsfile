@@ -8,7 +8,6 @@ pipeline {
         choice(name: "TEST_CHOICE", choices: ["production", "staging"], description: "Sample multi-choice parameter")
         string(name: 'REGISTRY_DOCKER', defaultValue: 'thonchhavalit', description: 'Registry')
         string(name: 'BUILD_CONTAINER_NAME', defaultValue: 'nextjs', description: 'container')
-        // string(name: 'CONTAINER_NAME', defaultValue: 'automatex', description: 'container')
         string(name: 'CONTAINER_NAME', defaultValue: generateContainerName(), description: 'container')
         string(name: 'DOCKER_TAG', defaultValue: 'latest', description: 'Docker_tag')
         string(name: 'REPO_URL', defaultValue: 'https://gitlab.com/MuyleangIng1/nextjs.git', description: 'Repository URL')
@@ -31,7 +30,6 @@ pipeline {
         MAX_PORT = '3010'
         //for git link 
          REPO_URL="${params.REPO_URL}"
-        //REPO_URL = 'https://gitlab.com/MuyleangIng1/reactjs'
         CREDENTIAL_GIT = 'password_for_gitlab'
         BRANCH = 'main'
     }
@@ -92,7 +90,6 @@ pipeline {
                         BUILD_CONTAINER_NAME,
                         CONTAINER_NAME,
                         DOCKER_TAG,
-                        // MAIL_SEND_TO,
                         TELEGRAM_BOT_TOKEN,
                         TELEGRAM_CHAT_ID
                     )
